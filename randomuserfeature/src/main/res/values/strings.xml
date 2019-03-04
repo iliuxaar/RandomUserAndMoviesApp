@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">RandomUserFeature</string>
+    <string name="user_photo_content_description">User photo</string>
 </resources>
