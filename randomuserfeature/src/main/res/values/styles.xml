@@ -12,6 +12,11 @@
         <item name="android:layout_height">wrap_content</item>
     </style>
 
+    <style name="WrapContent">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
     <style name="UsersItemCard" parent="MatchParent">
         <item name="android:layout_height">@dimen/user_item_height</item>
         <item name="android:layout_margin">@dimen/card_view_margin</item>
