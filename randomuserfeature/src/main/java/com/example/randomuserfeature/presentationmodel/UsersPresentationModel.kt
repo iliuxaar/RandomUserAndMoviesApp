@@ -17,20 +17,29 @@ class UsersPresentationModel: ScreenPresentationModel() {
 
     val userClick = Action<ResultsItem>()
     val result = State<List<ResultsItem>>()
+    val isLoading = State(initialValue = false)
+    val isError = State(initialValue = false)
+    val retryClick = Action<Unit>()
 
     override fun onCreate() {
         super.onCreate()
 
-        load()
+        load(true)
 
         userClick.observable
-            .subscribe(){
+            .subscribe {
                 sendMessage(ToastMessage())
             }
             .untilDestroy()
+
+        retryClick.observable
+                .subscribe {
+                    load(false)
+                }
+                .untilDestroy()
     }
 
-    private fun load(){
+    private fun load(error: Boolean){
         val interceptor = HttpLoggingInterceptor()
         interceptor.level = HttpLoggingInterceptor.Level.BODY
         val client = OkHttpClient.Builder()
@@ -45,14 +54,22 @@ class UsersPresentationModel: ScreenPresentationModel() {
             .build()
 
         val randomUserApi = retrofit.create(RandomUsersApi::class.java)
+
         randomUserApi.getRandomUsers(10)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
+            .doOnSubscribe {
+                if(error) throw Exception()
+                if (isError.value) isError.consumer.accept(false)
+                isLoading.consumer.accept(true)
+            }
             .subscribe (
                 { users ->
                     Log.d("test", users.toString())
+                    isLoading.consumer.accept(false)
                     result.consumer.accept(users.results) },
-                { error -> Log.d("errorTest", error.message)}
+                { error ->
+                    isError.consumer.accept(true)}
             )
     }
 
