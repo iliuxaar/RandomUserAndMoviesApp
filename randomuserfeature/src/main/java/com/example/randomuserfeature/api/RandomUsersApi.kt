@@ -12,5 +12,5 @@ import retrofit2.http.Query
 interface RandomUsersApi {
 
     @GET("api/")
-    fun getRandomUsers(@Query("results") size: Int): Single<Users>
+    fun getRandomUsers(@Query("results") size: Int, @Query("page") page: Int): Single<Users>
 }

@@ -11,6 +11,7 @@ import com.example.randomuserfeature.presentationmodel.UsersPresentationModel
 import com.example.randomuserfeature.setVisibility
 import com.jakewharton.rxbinding2.support.v4.widget.refreshes
 import com.jakewharton.rxbinding2.view.clicks
+import com.jakewharton.rxbinding3.recyclerview.scrollEvents
 import kotlinx.android.synthetic.main.retry_widget.view.*
 import kotlinx.android.synthetic.main.users_layout.*
 import me.dmdev.rxpm.navigation.NavigationMessage
@@ -46,7 +47,7 @@ class UsersScreen: Screen<UsersPresentationModel>(), NavigationMessageHandler {
 
         pm.result bindTo {
             users_list.setVisibility(true)
-            usersAdapter.setUsers(it)
+            usersAdapter.addUsers(it)
         }
 
         pm.isLoading bindTo {
@@ -59,6 +60,8 @@ class UsersScreen: Screen<UsersPresentationModel>(), NavigationMessageHandler {
         }
 
         retryWidget.retryButton.clicks().bindTo(pm.retryClick.consumer)
+
+        users_list.scrollEvents().bindTo(pm.onScroll.consumer)
 
         swipe_container.refreshes().bindTo(pm.swipeAction.consumer)
     }
