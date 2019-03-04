@@ -1,4 +1,6 @@
 package com.example.randomuserfeature.api.entities
 
-class Id {
-}
+data class Id (
+    val name: String = "",
+    val value: Int = -1
+)
