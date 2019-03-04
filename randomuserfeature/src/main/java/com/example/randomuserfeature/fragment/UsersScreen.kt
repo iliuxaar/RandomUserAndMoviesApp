@@ -20,7 +20,7 @@ import me.dmdev.rxpm.navigation.NavigationMessageHandler
 class UsersScreen: Screen<UsersPresentationModel>(), NavigationMessageHandler {
 
     private val usersAdapter = UsersAdapter { result ->
-        presentationModel.userClick.consumer.accept(result)
+        presentationModel.userItemClick.consumer.accept(result)
     }
 
     override val screenLayout = R.layout.users_layout
@@ -45,7 +45,7 @@ class UsersScreen: Screen<UsersPresentationModel>(), NavigationMessageHandler {
     override fun onBindPresentationModel(pm: UsersPresentationModel) {
         super.onBindPresentationModel(pm)
 
-        pm.result bindTo {
+        pm.loadedResult bindTo {
             users_list.setVisibility(true)
             usersAdapter.addUsers(it)
         }
@@ -59,11 +59,11 @@ class UsersScreen: Screen<UsersPresentationModel>(), NavigationMessageHandler {
             users_list.setVisibility(!it)
         }
 
-        retryWidget.retryButton.clicks().bindTo(pm.retryClick.consumer)
+        retryWidget.retryButton.clicks().bindTo(pm.retryButtonClick.consumer)
 
-        users_list.scrollEvents().bindTo(pm.onScroll.consumer)
+        users_list.scrollEvents().bindTo(pm.scrollListAction.consumer)
 
-        swipe_container.refreshes().bindTo(pm.swipeAction.consumer)
+        swipe_container.refreshes().bindTo(pm.refreshUsersAction.consumer)
     }
 
     override fun handleNavigationMessage(message: NavigationMessage): Boolean {

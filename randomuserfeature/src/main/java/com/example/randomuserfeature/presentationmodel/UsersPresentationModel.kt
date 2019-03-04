@@ -1,12 +1,12 @@
 package com.example.randomuserfeature.presentationmodel
 
-import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.randomuserfeature.ScreenPresentationModel
 import com.example.randomuserfeature.api.RandomUsersApi
 import com.example.randomuserfeature.api.entities.ResultsItem
 import com.jakewharton.rxbinding3.recyclerview.RecyclerViewScrollEvent
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
 import me.dmdev.rxpm.navigation.NavigationMessage
 import okhttp3.OkHttpClient
@@ -14,44 +14,42 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
-import java.util.concurrent.TimeUnit
 
 
 
 class UsersPresentationModel: ScreenPresentationModel() {
 
-    val userClick = Action<ResultsItem>()
-    val result = State<List<ResultsItem>>()
+    val userItemClick = Action<ResultsItem>()
+    val retryButtonClick = Action<Unit>()
+    val refreshUsersAction = Action<Unit>()
+    val scrollListAction = Action<RecyclerViewScrollEvent>()
+
+    val loadedResult = State<List<ResultsItem>>()
     val isLoading = State(initialValue = false)
     val isError = State(initialValue = false)
-    val retryClick = Action<Unit>()
-    val swipeAction = Action<Unit>()
-    val onScroll = Action<RecyclerViewScrollEvent>()
+
+    lateinit var loadTask: Disposable
 
     override fun onCreate() {
         super.onCreate()
+        initActions()
+        load()
+    }
 
-        load(true, 1)
-
-        userClick.observable
-            .subscribe {
-                sendMessage(ToastMessage())
-            }
+    private fun initActions(){
+        userItemClick.observable
+            .subscribe { sendMessage(ToastMessage()) }
             .untilDestroy()
 
-        retryClick.observable
-                .subscribe {
-                    load(false, 1)
-                }
-                .untilDestroy()
-
-        swipeAction.observable
-            .subscribe{
-                load(false, 1)
-            }
+        retryButtonClick.observable
+            .subscribe { load() }
             .untilDestroy()
 
-        onScroll.observable
+        refreshUsersAction.observable
+            .subscribe{ load() }
+            .untilDestroy()
+
+        scrollListAction.observable
             .subscribe(){
                 val layoutManager = (it.view.layoutManager as LinearLayoutManager)
                 val totalItemCount = layoutManager.itemCount
@@ -67,10 +65,21 @@ class UsersPresentationModel: ScreenPresentationModel() {
     }
 
     private fun loadMoreItems(page: Int){
-        load(false, page)
+        load(page)
     }
 
-    private fun load(error: Boolean, page: Int){
+    /**
+     * Load only first page
+     */
+    private fun load(){
+        load(1)
+    }
+
+    /**
+     * Load page depending on the page
+     * @param page - number of load page
+     */
+    private fun load(page: Int){
         val interceptor = HttpLoggingInterceptor()
         interceptor.level = HttpLoggingInterceptor.Level.BODY
         val client = OkHttpClient.Builder()
@@ -86,25 +95,26 @@ class UsersPresentationModel: ScreenPresentationModel() {
 
         val randomUserApi = retrofit.create(RandomUsersApi::class.java)
 
-         var task = randomUserApi.getRandomUsers(10, page)
-             .delay(2000, TimeUnit.MILLISECONDS)
+         loadTask = randomUserApi.getRandomUsers(10, page)
              .subscribeOn(Schedulers.io())
              .observeOn(AndroidSchedulers.mainThread())
              .doOnSubscribe {
-                 if(error) throw Exception()
                  if (isError.value) isError.consumer.accept(false)
                  isLoading.consumer.accept(true)
              }
              .subscribe (
                  { users ->
-                     Log.d("test", users.toString())
                      isLoading.consumer.accept(false)
-                     result.consumer.accept(users.results)
+                     loadedResult.consumer.accept(users.results)
                  },
                  { isError.consumer.accept(true)}
             )
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        loadTask.dispose()
+    }
 }
 
 class ToastMessage() : NavigationMessage
