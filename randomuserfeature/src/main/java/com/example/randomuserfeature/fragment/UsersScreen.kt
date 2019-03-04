@@ -9,6 +9,7 @@ import com.example.randomuserfeature.Screen
 import com.example.randomuserfeature.presentationmodel.ToastMessage
 import com.example.randomuserfeature.presentationmodel.UsersPresentationModel
 import com.example.randomuserfeature.setVisibility
+import com.jakewharton.rxbinding2.support.v4.widget.refreshes
 import com.jakewharton.rxbinding2.view.clicks
 import kotlinx.android.synthetic.main.retry_widget.view.*
 import kotlinx.android.synthetic.main.users_layout.*
@@ -32,6 +33,12 @@ class UsersScreen: Screen<UsersPresentationModel>(), NavigationMessageHandler {
             setHasFixedSize(true)
             adapter = usersAdapter
         }
+        swipe_container.setColorSchemeResources(
+            android.R.color.holo_blue_bright,
+            android.R.color.holo_green_light,
+            android.R.color.holo_orange_light,
+            android.R.color.holo_red_light
+        )
     }
 
     override fun onBindPresentationModel(pm: UsersPresentationModel) {
@@ -43,16 +50,17 @@ class UsersScreen: Screen<UsersPresentationModel>(), NavigationMessageHandler {
         }
 
         pm.isLoading bindTo {
-            loadingProgress.setVisibility(it)
+            swipe_container.isRefreshing = it
         }
 
         pm.isError bindTo {
             retryWidget.setVisibility(it)
-            loadingProgress.setVisibility(!it)
             users_list.setVisibility(!it)
         }
 
         retryWidget.retryButton.clicks().bindTo(pm.retryClick.consumer)
+
+        swipe_container.refreshes().bindTo(pm.swipeAction.consumer)
     }
 
     override fun handleNavigationMessage(message: NavigationMessage): Boolean {
