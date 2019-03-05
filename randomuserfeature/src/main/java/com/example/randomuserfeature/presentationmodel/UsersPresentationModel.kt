@@ -2,13 +2,13 @@ package com.example.randomuserfeature.presentationmodel
 
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.randomuserfeature.ScreenPresentationModel
+import com.example.randomuserfeature.UserDetailsMessage
 import com.example.randomuserfeature.api.RandomUsersApi
 import com.example.randomuserfeature.api.entities.ResultsItem
 import com.jakewharton.rxbinding3.recyclerview.RecyclerViewScrollEvent
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
-import me.dmdev.rxpm.navigation.NavigationMessage
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -38,7 +38,7 @@ class UsersPresentationModel: ScreenPresentationModel() {
 
     private fun initActions(){
         userItemClick.observable
-            .subscribe { sendMessage(ToastMessage()) }
+            .subscribe { sendMessage(UserDetailsMessage(it)) }
             .untilDestroy()
 
         retryButtonClick.observable
@@ -116,5 +116,3 @@ class UsersPresentationModel: ScreenPresentationModel() {
         loadTask.dispose()
     }
 }
-
-class ToastMessage() : NavigationMessage

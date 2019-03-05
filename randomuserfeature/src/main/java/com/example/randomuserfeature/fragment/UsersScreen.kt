@@ -2,11 +2,11 @@ package com.example.randomuserfeature.fragment
 
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.randomuserfeature.R
 import com.example.randomuserfeature.Screen
-import com.example.randomuserfeature.presentationmodel.ToastMessage
+import com.example.randomuserfeature.UserDetailsMessage
+import com.example.randomuserfeature.navigation.RouterProvider
 import com.example.randomuserfeature.presentationmodel.UsersPresentationModel
 import com.example.randomuserfeature.setVisibility
 import com.jakewharton.rxbinding2.support.v4.widget.refreshes
@@ -68,7 +68,7 @@ class UsersScreen: Screen<UsersPresentationModel>(), NavigationMessageHandler {
 
     override fun handleNavigationMessage(message: NavigationMessage): Boolean {
         when (message) {
-            is ToastMessage -> Toast.makeText(context, "Bla", Toast.LENGTH_LONG).show()
+            is UserDetailsMessage -> RouterProvider.router.navigateTo(UserDetailsScreen())
         }
         return true
     }
