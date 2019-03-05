@@ -27,6 +27,7 @@ class MainActivity : AppCompatActivity(), BackHandler{
         randomUsersFlowFragment = RandomUsersFlowFragment()
         supportFragmentManager.beginTransaction()
             .add(R.id.main_container, randomUsersFlowFragment, RANDOM_USER_TAG)
+            .hide(randomUsersFlowFragment)
             .commit()
     }
 

@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.randomuserfeature.R
 import com.example.randomuserfeature.api.entities.ResultsItem
-import com.example.randomuserfeature.inflate
+import com.example.randomuserfeature.utils.inflate
 import kotlinx.android.synthetic.main.item_user.view.*
 
 class UsersAdapter(

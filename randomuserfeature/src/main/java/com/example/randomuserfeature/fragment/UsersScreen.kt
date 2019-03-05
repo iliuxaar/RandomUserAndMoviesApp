@@ -8,7 +8,7 @@ import com.example.randomuserfeature.Screen
 import com.example.randomuserfeature.UserDetailsMessage
 import com.example.randomuserfeature.navigation.RouterProvider
 import com.example.randomuserfeature.presentationmodel.UsersPresentationModel
-import com.example.randomuserfeature.setVisibility
+import com.example.randomuserfeature.utils.setVisibility
 import com.jakewharton.rxbinding2.support.v4.widget.refreshes
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding3.recyclerview.scrollEvents
@@ -68,7 +68,7 @@ class UsersScreen: Screen<UsersPresentationModel>(), NavigationMessageHandler {
 
     override fun handleNavigationMessage(message: NavigationMessage): Boolean {
         when (message) {
-            is UserDetailsMessage -> RouterProvider.router.navigateTo(UserDetailsScreen())
+            is UserDetailsMessage -> RouterProvider.router.navigateTo(UserDetailsScreen.createInstance(message.userInfo.id.value ?: "null"))
         }
         return true
     }
