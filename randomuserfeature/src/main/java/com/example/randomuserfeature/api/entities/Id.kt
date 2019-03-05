@@ -2,5 +2,5 @@ package com.example.randomuserfeature.api.entities
 
 data class Id (
     val name: String = "",
-    val value: Int = -1
+    val value: String? = ""
 )
