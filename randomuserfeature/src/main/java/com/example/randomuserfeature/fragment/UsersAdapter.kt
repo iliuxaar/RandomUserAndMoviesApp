@@ -25,7 +25,7 @@ class UsersAdapter(
         this.users.clear()
     }
 
-    override fun getItemCount() = users.size ?: 0
+    override fun getItemCount() = users.size
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(parent.inflate(R.layout.item_user))

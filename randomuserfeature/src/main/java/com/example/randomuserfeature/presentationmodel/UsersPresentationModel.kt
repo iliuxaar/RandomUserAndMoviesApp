@@ -5,7 +5,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.randomuserfeature.ScreenPresentationModel
 import com.example.randomuserfeature.UserDetailsMessage
 import com.example.randomuserfeature.api.entities.ResultsItem
-import com.example.randomuserfeature.di.RandomUserComponent.Companion.randomUserApi
+import com.example.randomuserfeature.di.RandomUserDeps.Companion.randomUserApi
 import com.jakewharton.rxbinding3.recyclerview.RecyclerViewScrollEvent
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable

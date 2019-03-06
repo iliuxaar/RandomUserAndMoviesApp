@@ -3,7 +3,7 @@ package com.example.randomuserfeature.presentationmodel
 import android.util.Log
 import com.example.randomuserfeature.ScreenPresentationModel
 import com.example.randomuserfeature.api.entities.ResultsItem
-import com.example.randomuserfeature.di.RandomUserComponent
+import com.example.randomuserfeature.di.RandomUserDeps
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -22,7 +22,7 @@ class UserDetailsPresentationModel(
     }
 
     private fun loadUser(){
-        loadTask = RandomUserComponent.randomUserApi.getUserById(userId)
+        loadTask = RandomUserDeps.randomUserApi.getUserById(userId)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe (
