@@ -4,9 +4,9 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.coremodule.navigation.FlowFragment
-import com.example.randomuserfeature.RandomUsersFlowFragment
 import com.example.coremodule.navigation.Router
 import com.example.coremodule.navigation.RouterProvider
+import com.example.randomuserfeature.RandomUsersFlowFragment
 import com.example.testapp.R
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -26,11 +26,7 @@ class MainActivity : AppCompatActivity(), com.example.coremodule.pm.BackHandler 
     private fun initFragments(){
         randomUsersFlowFragment = RandomUsersFlowFragment()
         supportFragmentManager.beginTransaction()
-            .add(
-                R.id.main_container, randomUsersFlowFragment,
-                RANDOM_USER_TAG
-            )
-            .hide(randomUsersFlowFragment)
+            .add(R.id.main_container, randomUsersFlowFragment, RANDOM_USER_TAG)
             .commit()
     }
 
@@ -57,7 +53,7 @@ class MainActivity : AppCompatActivity(), com.example.coremodule.pm.BackHandler 
 
     private fun flowFromId(tabId: Int): FlowFragment {
         when(tabId) {
-            R.id.navigation_notifications -> return randomUsersFlowFragment
+            R.id.navigation_random_user -> return randomUsersFlowFragment
             else -> throw IllegalStateException("There should be one of the flow fragments")
         }
     }
@@ -68,12 +64,12 @@ class MainActivity : AppCompatActivity(), com.example.coremodule.pm.BackHandler 
 
     private fun selectFragment(id: Int){
         when(id){
-            R.id.navigation_notifications -> {
+            R.id.navigation_random_user -> {
                 supportFragmentManager.beginTransaction()
                     .show(randomUsersFlowFragment)
                     .commit()
             }
-            R.id.navigation_home -> {
+            R.id.navigation_movies -> {
                 supportFragmentManager.beginTransaction()
                     .hide(randomUsersFlowFragment)
                     .commit()
