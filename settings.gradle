@@ -1,1 +1,1 @@
-include ':app', ':randomuserfeature'
+include ':app', ':randomuserfeature', ':coremodule'
