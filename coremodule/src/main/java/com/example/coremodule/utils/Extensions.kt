@@ -1,4 +1,4 @@
-package com.example.randomuserfeature.utils
+package com.example.coremodule.utils
 
 import android.view.LayoutInflater
 import android.view.View

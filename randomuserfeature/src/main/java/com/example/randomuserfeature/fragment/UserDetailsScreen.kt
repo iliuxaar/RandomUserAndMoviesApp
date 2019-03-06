@@ -2,8 +2,8 @@ package com.example.randomuserfeature.fragment
 
 import android.os.Bundle
 import android.util.Log
+import com.example.coremodule.pm.Screen
 import com.example.randomuserfeature.R
-import com.example.randomuserfeature.Screen
 import com.example.randomuserfeature.presentationmodel.UserDetailsPresentationModel
 import kotlinx.android.synthetic.main.user_detail_fragment_layout.*
 
@@ -29,7 +29,7 @@ class UserDetailsScreen: Screen<UserDetailsPresentationModel>() {
         super.onBindPresentationModel(pm)
 
         pm.userResult bindTo {
-            textView2.text = it.name.first
+            secondScreenTextView.text = it.name.first
         }
     }
 }

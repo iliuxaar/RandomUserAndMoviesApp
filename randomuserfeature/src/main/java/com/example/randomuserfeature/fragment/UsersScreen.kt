@@ -3,12 +3,11 @@ package com.example.randomuserfeature.fragment
 import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.coremodule.navigation.RouterProvider
+import com.example.coremodule.utils.setVisibility
 import com.example.randomuserfeature.R
-import com.example.randomuserfeature.Screen
 import com.example.randomuserfeature.UserDetailsMessage
-import com.example.randomuserfeature.navigation.RouterProvider
 import com.example.randomuserfeature.presentationmodel.UsersPresentationModel
-import com.example.randomuserfeature.utils.setVisibility
 import com.jakewharton.rxbinding2.support.v4.widget.refreshes
 import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding3.recyclerview.scrollEvents
@@ -17,7 +16,7 @@ import kotlinx.android.synthetic.main.users_layout.*
 import me.dmdev.rxpm.navigation.NavigationMessage
 import me.dmdev.rxpm.navigation.NavigationMessageHandler
 
-class UsersScreen: Screen<UsersPresentationModel>(), NavigationMessageHandler {
+class UsersScreen: com.example.coremodule.pm.Screen<UsersPresentationModel>(), NavigationMessageHandler {
 
     private val usersAdapter = UsersAdapter { result ->
         presentationModel.userItemClick.consumer.accept(result)

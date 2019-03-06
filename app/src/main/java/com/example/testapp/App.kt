@@ -1,10 +1,10 @@
 package com.example.testapp
 
 import android.app.Application
-import com.example.testapp.di.CoreComponent
-import com.example.testapp.di.CoreDeps
+import com.example.randomuserfeature.di.DaggerRandomUserComponent
+import com.example.randomuserfeature.di.RandomUserComponent
+import com.example.randomuserfeature.di.RandomUserDependencies
 import com.example.testapp.di.DaggerAppComponent
-import com.example.testapp.di.DaggerCoreComponent
 
 class App: Application() {
 
@@ -23,10 +23,9 @@ class App: Application() {
                 .build()
         }
 
-        val coreComponent: CoreComponent by lazy {
-            DaggerCoreComponent.builder()
-                .coreDeps(object : CoreDeps {
-                    override fun context() = instance
+        val randomUserComponent: RandomUserComponent by lazy {
+            DaggerRandomUserComponent.builder()
+                .randomUserDependencies(object : RandomUserDependencies {
                 })
                 .build()
         }

@@ -1,12 +1,12 @@
-package com.example.randomuserfeature.navigation
+package com.example.coremodule.navigation
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.example.randomuserfeature.BackHandler
-import com.example.randomuserfeature.R
+import com.example.coremodule.R
+import com.example.coremodule.pm.BackHandler
 
 abstract class FlowFragment: Fragment(), BackHandler {
 

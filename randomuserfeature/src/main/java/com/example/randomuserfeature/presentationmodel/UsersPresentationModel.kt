@@ -2,7 +2,6 @@ package com.example.randomuserfeature.presentationmodel
 
 import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.randomuserfeature.ScreenPresentationModel
 import com.example.randomuserfeature.UserDetailsMessage
 import com.example.randomuserfeature.api.entities.ResultsItem
 import com.example.randomuserfeature.di.RandomUserDeps.Companion.randomUserApi
@@ -13,7 +12,7 @@ import io.reactivex.schedulers.Schedulers
 
 
 
-class UsersPresentationModel: ScreenPresentationModel() {
+class UsersPresentationModel: com.example.coremodule.pm.ScreenPresentationModel() {
 
     val userItemClick = Action<ResultsItem>()
     val retryButtonClick = Action<Unit>()

@@ -1,4 +1,4 @@
-package com.example.randomuserfeature.navigation
+package com.example.coremodule.navigation
 
 
 class RouterProvider {

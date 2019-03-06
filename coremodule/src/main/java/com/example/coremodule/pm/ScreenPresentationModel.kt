@@ -1,4 +1,4 @@
-package com.example.randomuserfeature
+package com.example.coremodule.pm
 
 import me.dmdev.rxpm.PresentationModel
 import me.dmdev.rxpm.navigation.NavigationMessage
@@ -29,3 +29,5 @@ abstract class ScreenPresentationModel : PresentationModel() {
         errorDialog.show(errorMessage ?: "Unknown error")
     }
 }
+
+class BackMessage: NavigationMessage

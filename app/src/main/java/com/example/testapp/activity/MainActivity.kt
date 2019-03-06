@@ -3,15 +3,14 @@ package com.example.testapp.activity
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.example.randomuserfeature.BackHandler
-import com.example.randomuserfeature.navigation.FlowFragment
-import com.example.randomuserfeature.navigation.RandomUsersFlowFragment
-import com.example.randomuserfeature.navigation.Router
-import com.example.randomuserfeature.navigation.RouterProvider
+import com.example.coremodule.navigation.FlowFragment
+import com.example.randomuserfeature.RandomUsersFlowFragment
+import com.example.coremodule.navigation.Router
+import com.example.coremodule.navigation.RouterProvider
 import com.example.testapp.R
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity(), BackHandler{
+class MainActivity : AppCompatActivity(), com.example.coremodule.pm.BackHandler {
 
     private lateinit var randomUsersFlowFragment: RandomUsersFlowFragment
 

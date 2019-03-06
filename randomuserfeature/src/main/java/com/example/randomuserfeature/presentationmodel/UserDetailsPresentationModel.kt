@@ -1,7 +1,6 @@
 package com.example.randomuserfeature.presentationmodel
 
 import android.util.Log
-import com.example.randomuserfeature.ScreenPresentationModel
 import com.example.randomuserfeature.api.entities.ResultsItem
 import com.example.randomuserfeature.di.RandomUserDeps
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -10,7 +9,7 @@ import io.reactivex.schedulers.Schedulers
 
 class UserDetailsPresentationModel(
     private val userId: String
-): ScreenPresentationModel() {
+): com.example.coremodule.pm.ScreenPresentationModel() {
 
     val userResult = State<ResultsItem>()
 
