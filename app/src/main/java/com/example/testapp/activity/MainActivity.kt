@@ -1,4 +1,4 @@
-package com.example.testapp
+package com.example.testapp.activity
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -8,6 +8,7 @@ import com.example.randomuserfeature.navigation.FlowFragment
 import com.example.randomuserfeature.navigation.RandomUsersFlowFragment
 import com.example.randomuserfeature.navigation.Router
 import com.example.randomuserfeature.navigation.RouterProvider
+import com.example.testapp.R
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), BackHandler{
@@ -26,7 +27,10 @@ class MainActivity : AppCompatActivity(), BackHandler{
     private fun initFragments(){
         randomUsersFlowFragment = RandomUsersFlowFragment()
         supportFragmentManager.beginTransaction()
-            .add(R.id.main_container, randomUsersFlowFragment, RANDOM_USER_TAG)
+            .add(
+                R.id.main_container, randomUsersFlowFragment,
+                RANDOM_USER_TAG
+            )
             .hide(randomUsersFlowFragment)
             .commit()
     }
