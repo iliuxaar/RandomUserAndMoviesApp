@@ -16,12 +16,10 @@ import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), com.example.coremodule.pm.BackHandler {
 
+    @Inject lateinit var flowFragmentsFactory: FlowFragmentsFactory
     private lateinit var randomUsersFlowFragment: Fragment
 
-    @Inject lateinit var flowFragmentsFactory: FlowFragmentsFactory
-
     override fun onCreate(savedInstanceState: Bundle?) {
-        //randomUserFragmentFactory = RandomUserFragmentFactory(App.mainRandomUserComponent)
         App.component.inject(this)
         supportFragmentManager.fragmentFactory = flowFragmentsFactory
         super.onCreate(savedInstanceState)

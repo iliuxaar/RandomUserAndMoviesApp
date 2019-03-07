@@ -16,6 +16,7 @@ class ComponentsModule {
     fun provideRandomUserDeps(): BaseRandomUserDepsComponent {
         return object : BaseRandomUserDepsComponent {
             override fun provideRetrofit() = App.component.retrofit()
+            override fun provideRouter() = App.component.router()
         }
     }
 

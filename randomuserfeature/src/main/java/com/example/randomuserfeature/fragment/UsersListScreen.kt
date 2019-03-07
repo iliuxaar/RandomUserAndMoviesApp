@@ -3,7 +3,7 @@ package com.example.randomuserfeature.fragment
 import android.os.Bundle
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.coremodule.navigation.RouterProvider
+import com.example.coremodule.navigation.Router
 import com.example.coremodule.pm.Screen
 import com.example.coremodule.utils.setVisibility
 import com.example.randomuserfeature.R
@@ -22,6 +22,7 @@ import javax.inject.Inject
 class UsersListScreen: Screen<UsersListPresentationModel>(), NavigationMessageHandler {
 
     @Inject lateinit var userPresentationModel: UsersListPresentationModel
+    @Inject lateinit var router: Router
 
     private val usersAdapter = UsersAdapter { result ->
         presentationModel.userItemClick.consumer.accept(result)
@@ -77,7 +78,7 @@ class UsersListScreen: Screen<UsersListPresentationModel>(), NavigationMessageHa
 
     override fun handleNavigationMessage(message: NavigationMessage): Boolean {
         when (message) {
-            is UserDetailsMessage -> RouterProvider.router.navigateTo(UserDetailsScreen.createInstance(message.userInfo.id.value ?: "null"))
+            is UserDetailsMessage -> router.navigateTo(UserDetailsScreen.createInstance(message.userInfo.id.value ?: "null"))
         }
         return true
     }

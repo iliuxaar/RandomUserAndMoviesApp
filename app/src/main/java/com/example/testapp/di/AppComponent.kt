@@ -1,6 +1,7 @@
 package com.example.testapp.di
 
 import android.content.Context
+import com.example.coremodule.navigation.Router
 import com.example.testapp.App
 import com.example.testapp.activity.MainActivity
 import com.example.testapp.di.module.ComponentsModule
@@ -25,4 +26,5 @@ interface AppComponent {
     }
 
     fun retrofit(): Retrofit
+    fun router(): Router
 }
