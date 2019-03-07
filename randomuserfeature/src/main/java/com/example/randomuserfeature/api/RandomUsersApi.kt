@@ -7,6 +7,10 @@ import retrofit2.http.Query
 
 interface RandomUsersApi {
 
+    companion object {
+        const val API_URL = "https://randomuser.me/"
+    }
+
     @GET("api/")
     fun getRandomUsers(@Query("results") size: Int, @Query("page") page: Int): Single<Users>
 

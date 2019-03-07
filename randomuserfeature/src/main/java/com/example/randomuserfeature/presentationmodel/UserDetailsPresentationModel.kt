@@ -1,15 +1,18 @@
 package com.example.randomuserfeature.presentationmodel
 
 import android.util.Log
+import com.example.coremodule.pm.ScreenPresentationModel
+import com.example.randomuserfeature.api.RandomUsersApi
 import com.example.randomuserfeature.api.entities.ResultsItem
-import com.example.randomuserfeature.di.RandomUserDeps
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
 
-class UserDetailsPresentationModel(
-    private val userId: String
-): com.example.coremodule.pm.ScreenPresentationModel() {
+class UserDetailsPresentationModel @Inject constructor(
+    private val userId: String,
+    val randomUsersApi: RandomUsersApi
+): ScreenPresentationModel() {
 
     val userResult = State<ResultsItem>()
 
@@ -21,7 +24,7 @@ class UserDetailsPresentationModel(
     }
 
     private fun loadUser(){
-        loadTask = RandomUserDeps.randomUserApi.getUserById(userId)
+        loadTask = randomUsersApi.getUserById(userId)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe (

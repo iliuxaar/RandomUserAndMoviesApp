@@ -2,17 +2,18 @@ package com.example.randomuserfeature.presentationmodel
 
 import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.coremodule.pm.ScreenPresentationModel
 import com.example.randomuserfeature.UserDetailsMessage
+import com.example.randomuserfeature.api.RandomUsersApi
 import com.example.randomuserfeature.api.entities.ResultsItem
-import com.example.randomuserfeature.di.RandomUserDeps.Companion.randomUserApi
 import com.jakewharton.rxbinding3.recyclerview.RecyclerViewScrollEvent
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
+import javax.inject.Inject
 
 
-
-class UsersPresentationModel: com.example.coremodule.pm.ScreenPresentationModel() {
+class UsersListPresentationModel @Inject constructor(val randomUserApi: RandomUsersApi) : ScreenPresentationModel() {
 
     val userItemClick = Action<ResultsItem>()
     val retryButtonClick = Action<Unit>()

@@ -5,7 +5,7 @@ import android.util.AttributeSet
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.example.randomuserfeature.R
 
-class RetryWidget: ConstraintLayout {
+internal class RetryWidget: ConstraintLayout {
 
     constructor(context: Context?) : super(context) { initView(context)}
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs) {initView(context)}

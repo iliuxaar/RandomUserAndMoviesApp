@@ -9,7 +9,7 @@ import com.example.randomuserfeature.R
 import com.example.randomuserfeature.api.entities.ResultsItem
 import kotlinx.android.synthetic.main.item_user.view.*
 
-class UsersAdapter(
+internal class UsersAdapter(
     private val itemClickListener: (result: ResultsItem) -> Unit
 ) : RecyclerView.Adapter<UsersAdapter.ViewHolder>() {
 
