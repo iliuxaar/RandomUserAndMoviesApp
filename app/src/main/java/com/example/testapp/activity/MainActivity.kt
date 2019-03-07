@@ -7,21 +7,23 @@ import com.example.coremodule.navigation.FlowFragment
 import com.example.coremodule.navigation.Router
 import com.example.coremodule.navigation.RouterProvider
 import com.example.coremodule.utils.addFactoryWithTransaction
-import com.example.randomuserfeature.RandomUserFragmentFactory
 import com.example.randomuserfeature.RandomUsersFlowFragment
 import com.example.testapp.App
 import com.example.testapp.R
+import com.example.testapp.fragmentfactory.FlowFragmentsFactory
 import kotlinx.android.synthetic.main.activity_main.*
+import javax.inject.Inject
 
 class MainActivity : AppCompatActivity(), com.example.coremodule.pm.BackHandler {
 
     private lateinit var randomUsersFlowFragment: Fragment
 
-    private lateinit var randomUserFragmentFactory: RandomUserFragmentFactory
+    @Inject lateinit var flowFragmentsFactory: FlowFragmentsFactory
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        randomUserFragmentFactory = RandomUserFragmentFactory(App.mainRandomUserComponent)
-        supportFragmentManager.fragmentFactory = randomUserFragmentFactory
+        //randomUserFragmentFactory = RandomUserFragmentFactory(App.mainRandomUserComponent)
+        App.component.inject(this)
+        supportFragmentManager.fragmentFactory = flowFragmentsFactory
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
@@ -32,8 +34,8 @@ class MainActivity : AppCompatActivity(), com.example.coremodule.pm.BackHandler 
 
     private fun initFragments(savedInstanceState: Bundle?){
         if(savedInstanceState == null) {
-            randomUsersFlowFragment = randomUserFragmentFactory.instantiate(classLoader, RandomUsersFlowFragment::class.java.name, Bundle())
-            supportFragmentManager.addFactoryWithTransaction(randomUserFragmentFactory)
+            randomUsersFlowFragment = flowFragmentsFactory.instantiate(classLoader, RandomUsersFlowFragment::class.java.name, Bundle())
+            supportFragmentManager.addFactoryWithTransaction(flowFragmentsFactory)
                 .add(R.id.main_container, randomUsersFlowFragment, RANDOM_USER_TAG)
                 .commit()
         } else {

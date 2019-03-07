@@ -1,9 +1,6 @@
 package com.example.testapp
 
 import android.app.Application
-import com.example.randomuserfeature.di.BaseRandomUserDepsComponent
-import com.example.randomuserfeature.di.DaggerMainRandomUserComponent
-import com.example.randomuserfeature.di.MainRandomUserComponent
 import com.example.testapp.di.DaggerAppComponent
 
 class App: Application() {
@@ -23,16 +20,16 @@ class App: Application() {
                 .build()
         }
 
-        private val randomUserDeps: BaseRandomUserDepsComponent by lazy {
-            object : BaseRandomUserDepsComponent {
-                override fun provideRetrofit() = component.retrofit()
-            }
-        }
-
-        val mainRandomUserComponent: MainRandomUserComponent by lazy {
-            DaggerMainRandomUserComponent.builder()
-                .baseRandomUserDepsComponent(randomUserDeps)
-                .build()
-        }
+//        private val randomUserDeps: BaseRandomUserDepsComponent by lazy {
+//            object : BaseRandomUserDepsComponent {
+//                override fun provideRetrofit() = component.retrofit()
+//            }
+//        }
+//
+//        val mainRandomUserComponent: MainRandomUserComponent by lazy {
+//            DaggerMainRandomUserComponent.builder()
+//                .baseRandomUserDepsComponent(randomUserDeps)
+//                .build()
+//        }
     }
 }

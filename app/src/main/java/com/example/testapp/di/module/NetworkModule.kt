@@ -13,8 +13,6 @@ import javax.inject.Singleton
 @Module
 class NetworkModule {
 
-    @JvmField val STUB_URL = "https://stub.com"
-
     private val interceptor by lazy { HttpLoggingInterceptor() }
     init {
         interceptor.level =
@@ -49,6 +47,10 @@ class NetworkModule {
                 .addCallAdapterFactory(rxJavaFactory)
                 .client(client)
                 .build()
+    }
+
+    private companion object {
+        private const val STUB_URL = "https://stub.com"
     }
 
 }
