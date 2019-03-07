@@ -10,7 +10,7 @@ import kotlin.reflect.KClass
 
 @Singleton
 class FlowFragmentsFactory @Inject constructor(
-    val randomUserFlowProvider: Provider<RandomUsersFlowFragment>
+    private val randomUserFlowProvider: Provider<RandomUsersFlowFragment>
     // add another flowFragmentsProviders there
 ): BaseFragmentFactory() {
 
