@@ -6,28 +6,39 @@ import androidx.fragment.app.Fragment
 import com.example.coremodule.navigation.FlowFragment
 import com.example.coremodule.navigation.Router
 import com.example.coremodule.navigation.RouterProvider
+import com.example.coremodule.utils.addFactoryWithTransaction
+import com.example.randomuserfeature.RandomUserFragmentFactory
 import com.example.randomuserfeature.RandomUsersFlowFragment
+import com.example.testapp.App
 import com.example.testapp.R
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), com.example.coremodule.pm.BackHandler {
 
-    private lateinit var randomUsersFlowFragment: RandomUsersFlowFragment
+    private lateinit var randomUsersFlowFragment: Fragment
+
+    private lateinit var randomUserFragmentFactory: RandomUserFragmentFactory
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        randomUserFragmentFactory = RandomUserFragmentFactory(App.mainRandomUserComponent)
+        supportFragmentManager.fragmentFactory = randomUserFragmentFactory
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         initBottomNavigation()
         initRouter()
-        initFragments()
+        initFragments(savedInstanceState)
     }
 
-    private fun initFragments(){
-        randomUsersFlowFragment = RandomUsersFlowFragment()
-        supportFragmentManager.beginTransaction()
-            .add(R.id.main_container, randomUsersFlowFragment, RANDOM_USER_TAG)
-            .commit()
+    private fun initFragments(savedInstanceState: Bundle?){
+        if(savedInstanceState == null) {
+            randomUsersFlowFragment = randomUserFragmentFactory.instantiate(classLoader, RandomUsersFlowFragment::class.java.name, Bundle())
+            supportFragmentManager.addFactoryWithTransaction(randomUserFragmentFactory)
+                .add(R.id.main_container, randomUsersFlowFragment, RANDOM_USER_TAG)
+                .commit()
+        } else {
+            randomUsersFlowFragment = supportFragmentManager.findFragmentByTag(RANDOM_USER_TAG) as RandomUsersFlowFragment
+        }
     }
 
     private fun initBottomNavigation(){
@@ -53,7 +64,7 @@ class MainActivity : AppCompatActivity(), com.example.coremodule.pm.BackHandler 
 
     private fun flowFromId(tabId: Int): FlowFragment {
         when(tabId) {
-            R.id.navigation_random_user -> return randomUsersFlowFragment
+            R.id.navigation_random_user -> return randomUsersFlowFragment as RandomUsersFlowFragment
             else -> throw IllegalStateException("There should be one of the flow fragments")
         }
     }
