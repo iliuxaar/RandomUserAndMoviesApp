@@ -1,44 +1,52 @@
 package com.example.testapp.activity
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.coremodule.navigation.FlowFragment
 import com.example.coremodule.navigation.Router
 import com.example.coremodule.navigation.RouterProvider
-import com.example.coremodule.utils.addFactoryWithTransaction
 import com.example.randomuserfeature.RandomUsersFlowFragment
 import com.example.testapp.App
 import com.example.testapp.R
-import com.example.testapp.fragmentfactory.FlowFragmentsFactory
+import com.example.testapp.factory.FlowFragmentsFactory
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
-class MainActivity : AppCompatActivity(), com.example.coremodule.pm.BackHandler {
+class MainActivity : BaseActivity() {
 
     @Inject lateinit var flowFragmentsFactory: FlowFragmentsFactory
     private lateinit var randomUsersFlowFragment: Fragment
+
+    override val layoutId = R.layout.activity_main
 
     override fun onCreate(savedInstanceState: Bundle?) {
         App.component.inject(this)
         supportFragmentManager.fragmentFactory = flowFragmentsFactory
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
 
         initBottomNavigation()
         initRouter()
         initFragments(savedInstanceState)
     }
 
+    override fun onResume() {
+        super.onResume()
+        showFlowFragments()
+    }
+
     private fun initFragments(savedInstanceState: Bundle?){
         if(savedInstanceState == null) {
             randomUsersFlowFragment = flowFragmentsFactory.instantiate(classLoader, RandomUsersFlowFragment::class.java.name, Bundle())
-            supportFragmentManager.addFactoryWithTransaction(flowFragmentsFactory)
-                .add(R.id.main_container, randomUsersFlowFragment, RANDOM_USER_TAG)
-                .commit()
         } else {
             randomUsersFlowFragment = supportFragmentManager.findFragmentByTag(RANDOM_USER_TAG) as RandomUsersFlowFragment
         }
+    }
+
+    private fun showFlowFragments(){
+        if (supportFragmentManager.findFragmentByTag(RANDOM_USER_TAG) == null)
+            supportFragmentManager.beginTransaction()
+                .add(R.id.main_container, randomUsersFlowFragment, RANDOM_USER_TAG)
+                .commit()
     }
 
     private fun initBottomNavigation(){
@@ -49,27 +57,12 @@ class MainActivity : AppCompatActivity(), com.example.coremodule.pm.BackHandler 
         navigation.setOnNavigationItemReselectedListener { flowFromId(it.itemId).reset() }
     }
 
-    private fun initRouter(){
-        val mRouter = object : Router {
-            override fun navigateTo(fragment: Fragment) {
-                getCurrentFlow().router.navigateTo(fragment)
-            }
-
-            override fun navigateBack(): Boolean {
-                return getCurrentFlow().router.navigateBack()
-            }
-        }
-        RouterProvider.registerRouter(mRouter)
-    }
-
     private fun flowFromId(tabId: Int): FlowFragment {
         when(tabId) {
             R.id.navigation_random_user -> return randomUsersFlowFragment as RandomUsersFlowFragment
             else -> throw IllegalStateException("There should be one of the flow fragments")
         }
     }
-
-    override fun handleBack() = getCurrentFlow().handleBack()
 
     private fun getCurrentFlow(): FlowFragment = flowFromId(navigation.selectedItemId)
 
@@ -88,9 +81,20 @@ class MainActivity : AppCompatActivity(), com.example.coremodule.pm.BackHandler 
         }
     }
 
-    override fun onBackPressed() {
-        if(!handleBack()) super.onBackPressed()
+    private fun initRouter(){
+        val mRouter = object : Router {
+            override fun navigateTo(fragment: Fragment) {
+                getCurrentFlow().router.navigateTo(fragment)
+            }
+
+            override fun navigateBack(): Boolean {
+                return getCurrentFlow().router.navigateBack()
+            }
+        }
+        RouterProvider.registerRouter(mRouter)
     }
+
+    override fun handleBack() = getCurrentFlow().handleBack()
 
     companion object {
         private const val RANDOM_USER_TAG = "random_user"
