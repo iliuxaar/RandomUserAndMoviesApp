@@ -1,6 +1,5 @@
 package com.example.randomuserfeature.presentationmodel
 
-import android.util.Log
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.coremodule.pm.ScreenPresentationModel
 import com.example.randomuserfeature.UserDetailsMessage
@@ -16,13 +15,11 @@ import javax.inject.Inject
 class UsersListPresentationModel @Inject constructor(val randomUserApi: RandomUsersApi) : ScreenPresentationModel() {
 
     val userItemClick = Action<ResultsItem>()
-    val retryButtonClick = Action<Unit>()
     val refreshUsersAction = Action<Unit>()
     val scrollListAction = Action<RecyclerViewScrollEvent>()
 
     val loadedResult = State<List<ResultsItem>>()
     val isLoading = State(initialValue = false)
-    val isError = State(initialValue = false)
 
     lateinit var loadTask: Disposable
 
@@ -37,16 +34,12 @@ class UsersListPresentationModel @Inject constructor(val randomUserApi: RandomUs
             .subscribe { sendMessage(UserDetailsMessage(it)) }
             .untilDestroy()
 
-        retryButtonClick.observable
-            .subscribe { load() }
-            .untilDestroy()
-
         refreshUsersAction.observable
             .subscribe{ load() }
             .untilDestroy()
 
         scrollListAction.observable
-            .subscribe(){
+            .subscribe{
                 val layoutManager = (it.view.layoutManager as LinearLayoutManager)
                 val totalItemCount = layoutManager.itemCount
                 val updatePosition = totalItemCount - 10 / 2
@@ -77,22 +70,14 @@ class UsersListPresentationModel @Inject constructor(val randomUserApi: RandomUs
      */
     private fun load(page: Int){
          loadTask = randomUserApi.getRandomUsers(10, page)
+             .map { it.results }
              .subscribeOn(Schedulers.io())
              .observeOn(AndroidSchedulers.mainThread())
-             .doOnSubscribe {
-                 if (isError.value) isError.consumer.accept(false)
-                 isLoading.consumer.accept(true)
+             .doOnSubscribe { isLoading.consumer.accept(true) }
+             .subscribe { users ->
+                 isLoading.consumer.accept(false)
+                 loadedResult.consumer.accept(users)
              }
-             .subscribe (
-                 { users ->
-                     isLoading.consumer.accept(false)
-                     loadedResult.consumer.accept(users.results)
-                 },
-                 {
-                     isError.consumer.accept(true)
-                     Log.d("test", it.message)
-                 }
-            )
     }
 
     override fun onDestroy() {

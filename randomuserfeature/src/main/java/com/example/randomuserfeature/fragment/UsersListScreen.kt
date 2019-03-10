@@ -5,15 +5,12 @@ import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.coremodule.navigation.Router
 import com.example.coremodule.pm.Screen
-import com.example.coremodule.utils.setVisibility
 import com.example.randomuserfeature.R
 import com.example.randomuserfeature.RandomUsersFlowFragment
 import com.example.randomuserfeature.UserDetailsMessage
 import com.example.randomuserfeature.presentationmodel.UsersListPresentationModel
 import com.jakewharton.rxbinding2.support.v4.widget.refreshes
-import com.jakewharton.rxbinding2.view.clicks
 import com.jakewharton.rxbinding3.recyclerview.scrollEvents
-import kotlinx.android.synthetic.main.retry_widget.view.*
 import kotlinx.android.synthetic.main.users_layout.*
 import me.dmdev.rxpm.navigation.NavigationMessage
 import me.dmdev.rxpm.navigation.NavigationMessageHandler
@@ -55,21 +52,9 @@ class UsersListScreen: Screen<UsersListPresentationModel>(), NavigationMessageHa
     override fun onBindPresentationModel(pm: UsersListPresentationModel) {
         super.onBindPresentationModel(pm)
 
-        pm.loadedResult bindTo {
-            users_list.setVisibility(true)
-            usersAdapter.addUsers(it)
-        }
+        pm.loadedResult bindTo { usersAdapter.addUsers(it) }
 
-        pm.isLoading bindTo {
-            swipe_container.isRefreshing = it
-        }
-
-        pm.isError bindTo {
-            retryWidget.setVisibility(it)
-            users_list.setVisibility(!it)
-        }
-
-        retryWidget.retryButton.clicks().bindTo(pm.retryButtonClick.consumer)
+        pm.isLoading bindTo { swipe_container.isRefreshing = it }
 
         users_list.scrollEvents().bindTo(pm.scrollListAction.consumer)
 
