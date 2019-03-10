@@ -1,4 +1,4 @@
-package com.example.testapp. fragmentfactory
+package com.example.testapp. factory
 
 import androidx.fragment.app.Fragment
 import com.example.coremodule.navigation.fragmentfactory.BaseFragmentFactory
