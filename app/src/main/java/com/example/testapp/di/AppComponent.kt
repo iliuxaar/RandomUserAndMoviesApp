@@ -9,6 +9,7 @@ import com.example.testapp.di.module.FragmentsModule
 import com.example.testapp.di.module.NetworkModule
 import dagger.BindsInstance
 import dagger.Component
+import io.reactivex.subjects.PublishSubject
 import retrofit2.Retrofit
 import javax.inject.Singleton
 
@@ -27,4 +28,5 @@ interface AppComponent {
 
     fun retrofit(): Retrofit
     fun router(): Router
+    fun retrySubject(): PublishSubject<Unit>
 }

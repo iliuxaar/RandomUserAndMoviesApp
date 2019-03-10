@@ -12,6 +12,7 @@ class App: Application() {
     }
 
     companion object {
+        const val ERROR_ACTION = "${BuildConfig.APPLICATION_ID}.action.ERROR"
         lateinit var instance: App
             private set
         val component by lazy {
@@ -19,17 +20,5 @@ class App: Application() {
                 .context(instance)
                 .build()
         }
-
-//        private val randomUserDeps: BaseRandomUserDepsComponent by lazy {
-//            object : BaseRandomUserDepsComponent {
-//                override fun provideRetrofit() = component.retrofit()
-//            }
-//        }
-//
-//        val mainRandomUserComponent: MainRandomUserComponent by lazy {
-//            DaggerMainRandomUserComponent.builder()
-//                .baseRandomUserDepsComponent(randomUserDeps)
-//                .build()
-//        }
     }
 }

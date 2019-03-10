@@ -2,4 +2,9 @@
     <string name="app_name">TestApp</string>
     <string name="title_movies">Movies API</string>
     <string name="title_random_user">RandomUser API</string>
+    <string name="retry_hint">Retry</string>
+    <string name="quit_hint">Quit</string>
+    <string name="error_message_hint">An error has occurred. Please check internet connection or try again later
+    </string>
+    <string name="error_dialog_tag">error_dialog</string>
 </resources>

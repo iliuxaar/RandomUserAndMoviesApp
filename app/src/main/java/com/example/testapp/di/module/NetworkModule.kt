@@ -1,23 +1,26 @@
 package com.example.testapp.di.module
 
 import com.example.testapp.BuildConfig
+import com.example.testapp.factory.RetryCallAdapterFactory
 import dagger.Module
 import dagger.Provides
+import io.reactivex.subjects.PublishSubject
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module
 class NetworkModule {
 
     private val interceptor by lazy { HttpLoggingInterceptor() }
+
     init {
         interceptor.level =
-                if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY
-                else HttpLoggingInterceptor.Level.NONE
+            if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY
+            else HttpLoggingInterceptor.Level.NONE
     }
 
     @Provides
@@ -27,8 +30,10 @@ class NetworkModule {
     @Provides
     @Singleton
     fun provideClient(interceptor: HttpLoggingInterceptor) = OkHttpClient.Builder()
-            .addInterceptor(interceptor)
-            .build()
+        .addInterceptor(interceptor)
+        .readTimeout(20, TimeUnit.SECONDS)
+        .connectTimeout(20, TimeUnit.SECONDS)
+        .build()
 
     @Provides
     @Singleton
@@ -36,18 +41,24 @@ class NetworkModule {
 
     @Provides
     @Singleton
-    fun provideRxJavaFactory() = RxJava2CallAdapterFactory.create()
+    fun provideRetryFactory(): RetryCallAdapterFactory = RetryCallAdapterFactory.create()
 
     @Provides
     @Singleton
-    fun provideRetrofit(client: OkHttpClient, rxJavaFactory: RxJava2CallAdapterFactory, gsonFactory: GsonConverterFactory): Retrofit{
-        return Retrofit.Builder()
-                .baseUrl(STUB_URL)
-                .addConverterFactory(gsonFactory)
-                .addCallAdapterFactory(rxJavaFactory)
-                .client(client)
-                .build()
-    }
+    fun provideRetrofit(
+        client: OkHttpClient,
+        rxJavaFactory: RetryCallAdapterFactory,
+        gsonFactory: GsonConverterFactory
+    ) = Retrofit.Builder()
+        .baseUrl(STUB_URL)
+        .addConverterFactory(gsonFactory)
+        .addCallAdapterFactory(rxJavaFactory)
+        .client(client)
+        .build()
+
+    @Provides
+    @Singleton
+    fun provideRetrySubject() = PublishSubject.create<Unit>()
 
     private companion object {
         private const val STUB_URL = "https://stub.com"
