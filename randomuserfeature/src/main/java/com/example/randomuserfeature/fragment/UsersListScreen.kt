@@ -41,12 +41,7 @@ class UsersListScreen: Screen<UsersListPresentationModel>(), NavigationMessageHa
             setHasFixedSize(true)
             adapter = usersAdapter
         }
-        swipe_container.setColorSchemeResources(
-            android.R.color.holo_blue_bright,
-            android.R.color.holo_green_light,
-            android.R.color.holo_orange_light,
-            android.R.color.holo_red_light
-        )
+        swipe_container.setSwipeableChildren(users_list.id)
     }
 
     override fun onBindPresentationModel(pm: UsersListPresentationModel) {

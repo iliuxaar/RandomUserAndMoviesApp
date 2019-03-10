@@ -54,4 +54,6 @@ internal class UsersAdapter(
                 .into(itemView.imageUser)
         }
     }
+
+
 }
