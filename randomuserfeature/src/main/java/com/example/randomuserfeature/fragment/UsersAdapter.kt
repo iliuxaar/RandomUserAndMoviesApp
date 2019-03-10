@@ -23,6 +23,7 @@ internal class UsersAdapter(
 
     fun clearItems(){
         this.users.clear()
+        notifyDataSetChanged()
     }
 
     override fun getItemCount() = users.size

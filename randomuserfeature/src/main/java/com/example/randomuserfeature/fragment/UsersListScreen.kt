@@ -53,7 +53,7 @@ class UsersListScreen: Screen<UsersListPresentationModel>(), NavigationMessageHa
 
         users_list.scrollEvents().bindTo(pm.scrollListAction.consumer)
 
-        swipe_container.refreshes().bindTo(pm.refreshUsersAction.consumer)
+        swipe_container.refreshes().doOnNext { usersAdapter.clearItems() }.bindTo(pm.refreshUsersAction.consumer)
     }
 
     override fun handleNavigationMessage(message: NavigationMessage): Boolean {
