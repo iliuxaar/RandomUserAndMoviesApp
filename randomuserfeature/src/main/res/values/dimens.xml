@@ -3,4 +3,5 @@
 
     <dimen name="card_view_margin">5dp</dimen>
     <dimen name="user_item_height">80dp</dimen>
+    <dimen name="user_item_image">60dp</dimen>
 </resources>

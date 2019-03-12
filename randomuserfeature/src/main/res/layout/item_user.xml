@@ -11,7 +11,8 @@
         <ImageView
                 android:id="@+id/imageUser"
                 style="@style/UsersItemContentLayout"
-                android:layout_width="wrap_content"
+                android:layout_width="@dimen/user_item_image"
+                android:layout_height="@dimen/user_item_image"
                 android:contentDescription="@string/user_photo_content_description"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
