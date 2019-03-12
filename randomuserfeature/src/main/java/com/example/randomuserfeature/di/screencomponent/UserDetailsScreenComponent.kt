@@ -12,7 +12,7 @@ interface UserDetailsScreenComponent {
     @Subcomponent.Builder
     interface Builder {
         @BindsInstance
-        fun userId(userId: String): Builder
+        fun userId(userId: Long): Builder
         fun build(): UserDetailsScreenComponent
     }
 }

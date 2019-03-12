@@ -1,32 +1,42 @@
 package com.example.randomuserfeature.presentationmodel
 
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.lifecycle.LiveData
+import androidx.paging.LivePagedListBuilder
+import androidx.paging.PagedList
 import com.example.coremodule.pm.ScreenPresentationModel
 import com.example.randomuserfeature.UserDetailsMessage
-import com.example.randomuserfeature.api.RandomUsersApi
-import com.example.randomuserfeature.api.entities.ResultsItem
-import com.jakewharton.rxbinding3.recyclerview.RecyclerViewScrollEvent
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.Disposable
-import io.reactivex.schedulers.Schedulers
+import com.example.randomuserfeature.api.GitHubApi
+import com.example.randomuserfeature.api.entities.User
+import com.example.randomuserfeature.data.PagingLoadingState
+import com.example.randomuserfeature.paging.UsersDataSourceFactory
+import io.reactivex.disposables.CompositeDisposable
 import javax.inject.Inject
 
 
-class UsersListPresentationModel @Inject constructor(val randomUserApi: RandomUsersApi) : ScreenPresentationModel() {
+class UsersListPresentationModel @Inject constructor(gitHubApi: GitHubApi) : ScreenPresentationModel() {
 
-    val userItemClick = Action<ResultsItem>()
+    val userItemClick = Action<User>()
     val refreshUsersAction = Action<Unit>()
-    val scrollListAction = Action<RecyclerViewScrollEvent>()
+    val retryActionClick = Action<Unit>()
 
-    val loadedResult = State<List<ResultsItem>>()
-    val isLoading = State(initialValue = false)
+    val isSwipeLoading = State(initialValue = false)
+    val isInitialLoad = State<PagingLoadingState>()
+    val isListLoading = State<PagingLoadingState>()
 
-    lateinit var loadTask: Disposable
+    private val pageSize = 15
+    private val sourceFactory: UsersDataSourceFactory
+    private val compositeDisposable = CompositeDisposable()
+    lateinit var userList: LiveData<PagedList<User>>
+
+    init {
+        sourceFactory = UsersDataSourceFactory(compositeDisposable, gitHubApi)
+        initPageList()
+    }
 
     override fun onCreate() {
         super.onCreate()
         initActions()
-        load()
+        initPageList()
     }
 
     private fun initActions(){
@@ -34,54 +44,41 @@ class UsersListPresentationModel @Inject constructor(val randomUserApi: RandomUs
             .subscribe { sendMessage(UserDetailsMessage(it)) }
             .untilDestroy()
 
-        refreshUsersAction.observable
-            .subscribe{ load() }
+        retryActionClick.observable
+            .subscribe { sourceFactory.usersDataSource.value!!.retry() }
             .untilDestroy()
 
-        scrollListAction.observable
+        refreshUsersAction.observable
             .subscribe{
-                val layoutManager = (it.view.layoutManager as LinearLayoutManager)
-                val totalItemCount = layoutManager.itemCount
-                val updatePosition = totalItemCount - 10 / 2
-                val firstVisibleItemPosition = layoutManager.findLastVisibleItemPosition()
-                if (!isLoading.value) {
-                    if (firstVisibleItemPosition >= updatePosition && layoutManager.findFirstVisibleItemPosition() != 0) {
-                        loadMoreItems((totalItemCount / 10) + 1)
-                    }
-                }
+                sourceFactory.usersDataSource.value!!.invalidate()
+                isSwipeLoading.consumer.accept(false)
             }
             .untilDestroy()
+
+        sourceFactory.usersDataSource
+            .switchMap { it.loadingStateRelay }
+            .subscribe { isListLoading.consumer.accept(it) }
+            .untilDestroy()
+
+        sourceFactory.usersDataSource
+            .switchMap { it.initialStateRelay }
+            .subscribe { isInitialLoad.consumer.accept(it)}
+            .untilDestroy()
+
     }
 
-    private fun loadMoreItems(page: Int){
-        load(page)
-    }
+    private fun initPageList(){
+        val config = PagedList.Config.Builder()
+            .setPageSize(pageSize)
+            .setInitialLoadSizeHint(pageSize * 2)
+            .setEnablePlaceholders(false)
+            .build()
 
-    /**
-     * Load only first page
-     */
-    private fun load(){
-        load(1)
-    }
-
-    /**
-     * Load page depending on the page
-     * @param page - number of load page
-     */
-    private fun load(page: Int){
-         loadTask = randomUserApi.getRandomUsers(10, page)
-             .map { it.results }
-             .subscribeOn(Schedulers.io())
-             .observeOn(AndroidSchedulers.mainThread())
-             .doOnSubscribe { isLoading.consumer.accept(true) }
-             .subscribe { users ->
-                 isLoading.consumer.accept(false)
-                 loadedResult.consumer.accept(users)
-             }
+        userList = LivePagedListBuilder<Long, User>(sourceFactory, config).build()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        loadTask.dispose()
+        compositeDisposable.dispose()
     }
 }

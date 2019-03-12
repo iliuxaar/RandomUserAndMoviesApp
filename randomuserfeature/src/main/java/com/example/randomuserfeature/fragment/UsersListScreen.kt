@@ -2,15 +2,20 @@ package com.example.randomuserfeature.fragment
 
 import android.os.Bundle
 import android.view.View
+import androidx.lifecycle.Observer
+import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.coremodule.navigation.Router
 import com.example.coremodule.pm.Screen
 import com.example.randomuserfeature.R
 import com.example.randomuserfeature.RandomUsersFlowFragment
 import com.example.randomuserfeature.UserDetailsMessage
+import com.example.randomuserfeature.api.entities.User
+import com.example.randomuserfeature.data.LoadingStatus
+import com.example.randomuserfeature.data.PagingLoadingState
 import com.example.randomuserfeature.presentationmodel.UsersListPresentationModel
 import com.jakewharton.rxbinding2.support.v4.widget.refreshes
-import com.jakewharton.rxbinding3.recyclerview.scrollEvents
+import kotlinx.android.synthetic.main.item_network_state.*
 import kotlinx.android.synthetic.main.users_layout.*
 import me.dmdev.rxpm.navigation.NavigationMessage
 import me.dmdev.rxpm.navigation.NavigationMessageHandler
@@ -21,9 +26,10 @@ class UsersListScreen: Screen<UsersListPresentationModel>(), NavigationMessageHa
     @Inject lateinit var userPresentationModel: UsersListPresentationModel
     @Inject lateinit var router: Router
 
-    private val usersAdapter = UsersAdapter { result ->
-        presentationModel.userItemClick.consumer.accept(result)
-    }
+    private val usersAdapter = UsersListAdapter (
+        { presentationModel.userItemClick.consumer.accept(it) },
+        { presentationModel.retryActionClick.consumer.accept(Unit) }
+    )
 
     override val screenLayout = R.layout.users_layout
 
@@ -36,29 +42,59 @@ class UsersListScreen: Screen<UsersListPresentationModel>(), NavigationMessageHa
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        with(users_list) {
+        with(usersList) {
             layoutManager = LinearLayoutManager(context)
             setHasFixedSize(true)
             adapter = usersAdapter
         }
-        swipe_container.setSwipeableChildren(users_list.id)
+        swipeRefresher.setSwipeableChildren(usersList.id)
     }
 
     override fun onBindPresentationModel(pm: UsersListPresentationModel) {
         super.onBindPresentationModel(pm)
 
-        pm.loadedResult bindTo { usersAdapter.addUsers(it) }
+        pm.userList.observe(this, Observer<PagedList<User>> { usersAdapter.submitList(it)})
 
-        pm.isLoading bindTo { swipe_container.isRefreshing = it }
+        pm.isSwipeLoading bindTo {
+            swipeRefresher.isRefreshing = it
+        }
 
-        users_list.scrollEvents().bindTo(pm.scrollListAction.consumer)
+        pm.isListLoading.bindTo {
+            usersAdapter.setLoadingState(it)
+        }
 
-        swipe_container.refreshes().doOnNext { usersAdapter.clearItems() }.bindTo(pm.refreshUsersAction.consumer)
+        pm.isInitialLoad bindTo {
+            if(usersAdapter.run { currentList != null && currentList!!.size > 0 }){
+                swipeRefresher.isRefreshing = it.loadingStatus == LoadingStatus.LOADING
+            } else setInitialLoadingState(it)
+        }
+
+        swipeRefresher.refreshes().bindTo(pm.refreshUsersAction.consumer)
     }
+
+    private fun setInitialLoadingState(pagingLoadingState: PagingLoadingState){
+        errorMessageTextView.visibility = if (pagingLoadingState.errorMessage != null) View.VISIBLE else View.GONE
+        if (pagingLoadingState.errorMessage != null) {
+            errorMessageTextView.text = pagingLoadingState.errorMessage
+        }
+
+        retryLoadingButton.visibility = if (pagingLoadingState.loadingStatus == LoadingStatus.FAILED) View.VISIBLE else View.GONE
+        loadingProgressBar.visibility = if (pagingLoadingState.loadingStatus == LoadingStatus.LOADING) View.VISIBLE else View.GONE
+
+        if (pagingLoadingState.loadingStatus == LoadingStatus.LOADING_WITH_ERROR) {
+            retryLoadingButton.visibility = View.VISIBLE
+            loadingProgressBar.visibility = View.VISIBLE
+        }
+
+        swipeRefresher.isEnabled = pagingLoadingState.loadingStatus == LoadingStatus.SUCCESS
+
+        retryLoadingButton.setOnClickListener { Unit passTo presentationModel.retryActionClick.consumer }
+    }
+
 
     override fun handleNavigationMessage(message: NavigationMessage): Boolean {
         when (message) {
-            is UserDetailsMessage -> router.navigateTo(UserDetailsScreen.createInstance(message.userInfo.id.value ?: "null"))
+            is UserDetailsMessage -> router.navigateTo(UserDetailsScreen.createInstance(message.user.id))
         }
         return true
     }

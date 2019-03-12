@@ -1,7 +1,6 @@
 package com.example.randomuserfeature.fragment
 
 import android.os.Bundle
-import android.util.Log
 import com.example.coremodule.pm.Screen
 import com.example.randomuserfeature.R
 import com.example.randomuserfeature.RandomUsersFlowFragment
@@ -15,14 +14,13 @@ class UserDetailsScreen: Screen<UserDetailsPresentationModel>() {
 
     companion object {
         private const val ID = "valueId"
-        fun createInstance(valueId: String) = UserDetailsScreen().apply {
-            arguments = Bundle().apply { putString(ID, valueId) }
-            Log.d("test", "id is $valueId")
+        fun createInstance(id: Long) = UserDetailsScreen().apply {
+            arguments = Bundle().apply { putLong(ID, id) }
         }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        RandomUsersFlowFragment.plusUserDetailsComponent().userId(arguments!!.getString(ID)).build().inject(this)
+        RandomUsersFlowFragment.plusUserDetailsComponent().userId(arguments!!.getLong(ID)).build().inject(this)
         super.onCreate(savedInstanceState)
     }
 
@@ -34,7 +32,7 @@ class UserDetailsScreen: Screen<UserDetailsPresentationModel>() {
         super.onBindPresentationModel(pm)
 
         pm.userResult bindTo {
-            secondScreenTextView.text = it.name.first
+            secondScreenTextView.text = it.login
         }
     }
 }
