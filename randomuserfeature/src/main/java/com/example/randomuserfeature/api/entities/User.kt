@@ -1,40 +1,30 @@
 package com.example.randomuserfeature.api.entities
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
+import java.util.*
 
+@Entity
 data class User(
-    @SerializedName("login")
-    val login: String,
-    @SerializedName("id")
-    val id: Long = 0,
-    @SerializedName("avatar_url")
-    val avatarUrl: String,
-    @SerializedName("gravatar_id")
-    val gravatarId: String,
-    @SerializedName("url")
-    val url: String,
-    @SerializedName("html_url")
-    val htmlUrl: String,
-    @SerializedName("followers_url")
-    val followersUrl: String,
-    @SerializedName("following_url")
-    val followingUrl: String,
-    @SerializedName("gists_url")
-    val gistsUrl: String,
-    @SerializedName("starred_url")
-    val starredUrl: String,
-    @SerializedName("subscriptions_url")
-    val subscriptionsUrl: String,
-    @SerializedName("organizations_url")
-    val organizationsUrl: String,
-    @SerializedName("repos_url")
-    val reposUrl: String,
-    @SerializedName("events_url")
-    val eventsUrl: String,
-    @SerializedName("received_events_url")
-    val receivedEventsUrl: String,
-    @SerializedName("type")
-    val type: String,
-    @SerializedName("site_admin")
-    val siteAdmin: Boolean = false
-)
+    @PrimaryKey val id: Long = 0,
+    val login: String,      // username
+    val type: String,       // ex. User
+    val name: String,
+    val company: String?,
+    val location: String?,
+    val email: String?,
+    val bio: String?,        // add info
+    @SerializedName("avatar_url")        val avatarUrl: String,
+    @SerializedName("html_url")          val url: String,                // real url
+    @SerializedName("following_url")     val followingUrl: String,
+    @SerializedName("subscriptions_url") val subscriptionsUrl: String,
+    @SerializedName("repos_url")         val reposUrl: String,
+    @SerializedName("blog")              val blogUrl: String?,
+    @SerializedName("site_admin")        val siteAdmin: Boolean = false,
+    @SerializedName("public_repos")      val publicRepositoriesCount: Int = 0,
+    @SerializedName("followers")         val followersCount: Int = 0,
+    @SerializedName("following")         val followingCount: Int = 0,
+    @SerializedName("created_at")        val createdDate: Date?,
+    @SerializedName("updated_at")        val updatedDate: Date?
+    )
