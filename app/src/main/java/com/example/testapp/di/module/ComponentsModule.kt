@@ -1,5 +1,6 @@
 package com.example.testapp.di.module
 
+import com.example.randomuserfeature.api.db.UsersDatabase
 import com.example.randomuserfeature.di.BaseRandomUserDepsComponent
 import com.example.randomuserfeature.di.DaggerMainRandomUserComponent
 import com.example.randomuserfeature.di.MainRandomUserComponent
@@ -17,6 +18,7 @@ class ComponentsModule {
         return object : BaseRandomUserDepsComponent {
             override fun provideRetrofit() = App.component.retrofit()
             override fun provideRouter() = App.component.router()
+            override fun provideDatabase(): UsersDatabase = App.component.database()
         }
     }
 

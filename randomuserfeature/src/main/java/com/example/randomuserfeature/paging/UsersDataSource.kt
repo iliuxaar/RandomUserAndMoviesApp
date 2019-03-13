@@ -1,8 +1,8 @@
 package com.example.randomuserfeature.paging
 
 import androidx.paging.ItemKeyedDataSource
-import com.example.randomuserfeature.api.GitHubApi
 import com.example.randomuserfeature.api.entities.User
+import com.example.randomuserfeature.api.network.GitHubApi
 import com.example.randomuserfeature.data.PagingLoadingState
 import com.jakewharton.rxrelay2.BehaviorRelay
 import io.reactivex.Completable

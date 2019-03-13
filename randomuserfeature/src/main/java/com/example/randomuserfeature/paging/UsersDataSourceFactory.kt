@@ -1,8 +1,8 @@
 package com.example.randomuserfeature.paging
 
 import androidx.paging.DataSource
-import com.example.randomuserfeature.api.GitHubApi
 import com.example.randomuserfeature.api.entities.User
+import com.example.randomuserfeature.api.network.GitHubApi
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.subjects.BehaviorSubject
 

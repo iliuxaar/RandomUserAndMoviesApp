@@ -1,7 +1,8 @@
 package com.example.randomuserfeature.di.module
 
-import com.example.randomuserfeature.api.GitHubApi
-import com.example.randomuserfeature.api.GitHubApi.Companion.GITHUB_API_URL
+import com.example.randomuserfeature.api.db.UsersDatabase
+import com.example.randomuserfeature.api.network.GitHubApi
+import com.example.randomuserfeature.api.network.GitHubApi.Companion.GITHUB_API_URL
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
@@ -23,4 +24,8 @@ class RandomUsersModule {
             .addCallAdapterFactory(rxJava2CallAdapterFactory)
             .build()
             .create(GitHubApi::class.java)
+
+    @Provides
+    @Singleton
+    fun provideUsersDao(usersDatabase: UsersDatabase) = usersDatabase.usersDao()
 }
