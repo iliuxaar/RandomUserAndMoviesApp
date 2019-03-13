@@ -30,6 +30,7 @@ dependencies {
     implementation project(':randomuserfeature')
     implementation project(':coremodule')
 
+    kapt "android.arch.persistence.room:compiler:1.1.1"
     kapt 'com.google.dagger:dagger-compiler:2.21'
 
     implementation 'com.google.android.material:material:1.0.0-beta01'
