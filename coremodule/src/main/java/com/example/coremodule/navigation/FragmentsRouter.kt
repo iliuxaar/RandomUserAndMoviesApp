@@ -2,6 +2,7 @@ package com.example.coremodule.navigation
 
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_OPEN
 
 class FragmentsRouter(
     private val mFragmentManager: FragmentManager,
@@ -17,6 +18,7 @@ class FragmentsRouter(
         }
 
         transaction.add(mContainerId, fragment)
+            .setTransition(TRANSIT_FRAGMENT_OPEN)
             .addToBackStack(null)
             .commit()
     }
