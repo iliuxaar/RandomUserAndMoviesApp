@@ -3,4 +3,6 @@
     <string name="user_photo_content_description">User photo</string>
     <string name="error">An error has occurred\nPlease, retry</string>
     <string name="retry_hint">retry</string>
+    <string name="delete_hint">Delete</string>
+    <string name="edit_hint">Edit</string>
 </resources>
