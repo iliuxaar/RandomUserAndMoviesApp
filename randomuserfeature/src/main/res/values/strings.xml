@@ -5,4 +5,6 @@
     <string name="retry_hint">retry</string>
     <string name="delete_hint">Delete</string>
     <string name="edit_hint">Edit</string>
+    <string name="db_hint">DB</string>
+    <string name="api_hint">API</string>
 </resources>

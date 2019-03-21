@@ -6,13 +6,29 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout style="@style/MatchParent">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/usersList"
-            style="@style/MatchParent"
-            app:layout_constraintBottom_toBottomOf="parent"
+        <ToggleButton
+            android:id="@+id/dbCheckBox"
+            style="@style/WrapContent"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/db_toggle_button"
+            android:textOff="@string/api_hint"
+            android:textOn="@string/db_hint"
+            android:gravity="center"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/usersList"
+            style="@style/MatchParent"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/dbCheckBox" />
 
         <include
             layout="@layout/item_network_state"
