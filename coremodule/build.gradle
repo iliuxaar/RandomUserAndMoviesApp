@@ -43,7 +43,8 @@ dependencies {
 
     api 'com.google.code.findbugs:jsr305:3.0.2'
 
-    api "android.arch.paging:runtime:1.0.1"
+    api "android.arch.paging:runtime:2.1.0"
+    api "android.arch.paging:rxjava2:2.1.0"
 
     api 'com.android.support:design:28.2.0'
     api 'androidx.recyclerview:recyclerview:1.0.0'
