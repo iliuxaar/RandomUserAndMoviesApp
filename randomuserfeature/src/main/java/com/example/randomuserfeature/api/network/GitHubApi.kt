@@ -1,7 +1,7 @@
 package com.example.randomuserfeature.api.network
 
 import com.example.randomuserfeature.api.entities.User
-import io.reactivex.Flowable
+import io.reactivex.Observable
 import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -13,7 +13,7 @@ interface GitHubApi {
     fun getUsers(@Query("since") userId: Long, @Query("per_page") perPage: Int): Single<List<User>>
 
     @GET("/user/{id}")
-    fun getUserById(@Path("id") userId: Long): Flowable<User>
+    fun getUserById(@Path("id") userId: Long): Observable<User>
 
     companion object {
         const val GITHUB_API_URL = "https://api.github.com/"

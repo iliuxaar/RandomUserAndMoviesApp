@@ -1,17 +1,12 @@
 package com.example.randomuserfeature.presentationmodel
 
 import com.example.coremodule.pm.ScreenPresentationModel
-import com.example.randomuserfeature.api.db.UsersDao
 import com.example.randomuserfeature.api.entities.User
-import com.example.randomuserfeature.api.network.GitHubApi
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import com.example.randomuserfeature.interactor.UserDetailsInteractor
 import javax.inject.Inject
 
 class UserDetailsPresentationModel @Inject constructor(
-    private val userId: Long,
-    val gitHubApi: GitHubApi,
-    val usersDao: UsersDao
+    private val userDetailsInteractor: UserDetailsInteractor
 ): ScreenPresentationModel() {
 
     val userResult = State<User>()
@@ -24,10 +19,7 @@ class UserDetailsPresentationModel @Inject constructor(
 
     private fun loadUser(){
         loadError.consumer.accept(false)
-        gitHubApi.getUserById(userId)
-            .doOnNext { usersDao.insertUser(it) }
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
+        userDetailsInteractor.getUser()
             .subscribe{ userResult.consumer.accept(it)}
             .untilDestroy()
 

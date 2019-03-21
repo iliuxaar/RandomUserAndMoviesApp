@@ -2,19 +2,18 @@ package com.example.randomuserfeature.fragment
 
 import android.os.Bundle
 import android.view.View
-import androidx.lifecycle.Observer
-import androidx.paging.PagedList
+import android.view.animation.AnimationUtils
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.coremodule.navigation.Router
 import com.example.coremodule.pm.Screen
 import com.example.randomuserfeature.R
 import com.example.randomuserfeature.RandomUsersFlowFragment
 import com.example.randomuserfeature.UserDetailsMessage
-import com.example.randomuserfeature.api.entities.User
 import com.example.randomuserfeature.data.LoadingStatus
 import com.example.randomuserfeature.data.PagingLoadingState
 import com.example.randomuserfeature.presentationmodel.UsersListPresentationModel
 import com.jakewharton.rxbinding2.support.v4.widget.refreshes
+import com.jakewharton.rxbinding2.widget.checkedChanges
 import kotlinx.android.synthetic.main.item_network_state.*
 import kotlinx.android.synthetic.main.users_layout.*
 import me.dmdev.rxpm.navigation.NavigationMessage
@@ -53,22 +52,16 @@ class UsersListScreen: Screen<UsersListPresentationModel>(), NavigationMessageHa
     override fun onBindPresentationModel(pm: UsersListPresentationModel) {
         super.onBindPresentationModel(pm)
 
-        pm.userList.observe(this, Observer<PagedList<User>> { usersAdapter.submitList(it)})
-
-        pm.isSwipeLoading bindTo {
-            swipeRefresher.isRefreshing = it
-        }
-
-        pm.isListLoading.bindTo {
-            usersAdapter.setLoadingState(it)
-        }
-
+        pm.isPagedListReady bindTo { usersAdapter.submitList(it)}
+        pm.isSwipeLoading bindTo { swipeRefresher.isRefreshing = it }
+        pm.isListLoading.bindTo { usersAdapter.setLoadingState(it) }
         pm.isInitialLoad bindTo {
             if(usersAdapter.run { currentList != null && currentList!!.size > 0 }){
                 swipeRefresher.isRefreshing = it.loadingStatus == LoadingStatus.LOADING
             } else setInitialLoadingState(it)
         }
 
+        dbCheckBox.checkedChanges().bindTo { pm.shouldUseDbClick.consumer.accept(it) }
         swipeRefresher.refreshes().bindTo(pm.refreshUsersAction.consumer)
     }
 

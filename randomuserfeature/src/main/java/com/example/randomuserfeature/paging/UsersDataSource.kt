@@ -2,8 +2,8 @@ package com.example.randomuserfeature.paging
 
 import androidx.paging.ItemKeyedDataSource
 import com.example.randomuserfeature.api.entities.User
-import com.example.randomuserfeature.api.network.GitHubApi
 import com.example.randomuserfeature.data.PagingLoadingState
+import com.example.randomuserfeature.repository.UsersRepository
 import com.jakewharton.rxrelay2.BehaviorRelay
 import io.reactivex.Completable
 import io.reactivex.Flowable
@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit
 internal const val RETRY_LIMIT = 5
 
 class UsersDataSource(
-    private val gitHubApi: GitHubApi,
+    private val usersRepository: UsersRepository,
     private val compositeDisposable: CompositeDisposable
 ) : ItemKeyedDataSource<Long, User>() {
 
@@ -29,7 +29,7 @@ class UsersDataSource(
     override fun loadInitial(params: LoadInitialParams<Long>, callback: LoadInitialCallback<User>) {
         doBeforeLoad()
         initialStateRelay.accept(PagingLoadingState.LOADING)
-        onLoad(gitHubApi.getUsers(1, params.requestedLoadSize)
+        onLoad(usersRepository.getUsers(1, params.requestedLoadSize)
             .retryWhen(this::autoRetry)
             .subscribe(
                 {
@@ -47,7 +47,7 @@ class UsersDataSource(
 
     override fun loadAfter(params: LoadParams<Long>, callback: LoadCallback<User>) {
         doBeforeLoad()
-        onLoad(gitHubApi.getUsers(params.key, params.requestedLoadSize)
+        onLoad(usersRepository.getUsers(params.key, params.requestedLoadSize)
             .retryWhen(this::autoRetry)
             .subscribe(
                 { doOnSuccess(it, callback) },
