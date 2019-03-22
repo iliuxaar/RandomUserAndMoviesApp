@@ -5,7 +5,12 @@
   android:height="240dp"
   android:viewportHeight="240"
   android:viewportWidth="240">
-  <group android:name="all">
+  <group
+    android:name="all"
+    android:scaleX="0.8"
+    android:scaleY="0.8"
+    android:pivotX="120"
+    android:pivotY="120">
     <group
       android:pivotX="120"
       android:pivotY="120"
