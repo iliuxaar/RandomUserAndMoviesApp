@@ -32,11 +32,12 @@
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/dbCheckBox"
             style="@style/WrapContent"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_marginEnd="8dp"
+            android:scaleType="centerCrop"
             app:srcCompat="@drawable/save_icon_animated_start"
-            android:stateListAnimator="@animator/view_pressed_graw_up_list_animator"
+            android:stateListAnimator="@animator/view_pressed_grow_up_list_animator"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

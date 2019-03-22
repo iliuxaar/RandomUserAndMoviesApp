@@ -4,6 +4,46 @@
         xmlns:aapt="http://schemas.android.com/aapt"
         android:drawable="@drawable/save_icon_animated">
 
+    <target android:name="all">
+        <aapt:attr name="android:animation">
+            <set>
+
+                <objectAnimator
+                        android:duration="700"
+                        android:interpolator="@android:interpolator/fast_out_slow_in"
+                        android:propertyName="scaleX"
+                        android:valueFrom="1"
+                        android:valueTo="0.6"
+                        android:valueType="floatType"/>
+
+                <objectAnimator
+                        android:duration="700"
+                        android:interpolator="@android:interpolator/fast_out_slow_in"
+                        android:propertyName="scaleY"
+                        android:valueFrom="1"
+                        android:valueTo="0.6"
+                        android:valueType="floatType"/>
+
+                <objectAnimator
+                        android:duration="700"
+                        android:interpolator="@android:interpolator/fast_out_slow_in"
+                        android:propertyName="pivotX"
+                        android:valueFrom="50dp"
+                        android:valueTo="50dp"
+                        android:valueType="floatType"/>
+
+                <objectAnimator
+                        android:duration="700"
+                        android:interpolator="@android:interpolator/fast_out_slow_in"
+                        android:propertyName="pivotY"
+                        android:valueFrom="50dp"
+                        android:valueTo="50dp"
+                        android:valueType="floatType"/>
+
+            </set>
+        </aapt:attr>
+    </target>
+
     <target android:name="arrow_path">
         <aapt:attr name="android:animation">
 
