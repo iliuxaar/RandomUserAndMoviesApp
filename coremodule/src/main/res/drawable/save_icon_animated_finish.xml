@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<animated-vector
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:aapt="http://schemas.android.com/aapt"
+        android:drawable="@drawable/save_icon_animated">
+
+    <target android:name="arrow_path">
+        <aapt:attr name="android:animation">
+
+            <objectAnimator
+                    android:duration="350"
+                    android:interpolator="@android:interpolator/fast_out_slow_in"
+                    android:propertyName="fillAlpha"
+                    android:valueFrom="1"
+                    android:valueTo="0"
+                    android:valueType="floatType"/>
+
+        </aapt:attr>
+    </target>
+
+    <target android:name="line_path">
+        <aapt:attr name="android:animation">
+
+            <objectAnimator
+                    android:duration="1500"
+                    android:interpolator="@android:interpolator/accelerate_decelerate"
+                    android:propertyName="strokeColor"
+                    android:valueFrom="#99000000"
+                    android:valueTo="#1E9618"
+                    android:valueType="intType"/>
+
+        </aapt:attr>
+    </target>
+
+    <target android:name="progress_bar">
+        <aapt:attr name="android:animation">
+            <set>
+                <objectAnimator
+                        android:duration="1000"
+                        android:interpolator="@android:interpolator/accelerate_decelerate"
+                        android:propertyName="strokeColor"
+                        android:valueFrom="#99000000"
+                        android:valueTo="#1E9618"
+                        android:valueType="intType"/>
+
+                <objectAnimator
+                        android:duration="600"
+                        android:startOffset="150"
+                        android:interpolator="@android:interpolator/fast_out_slow_in"
+                        android:propertyName="trimPathEnd"
+                        android:valueFrom="0"
+                        android:valueTo="1"/>
+            </set>
+
+        </aapt:attr>
+    </target>
+
+    <target android:name="progress_bar_check">
+        <aapt:attr name="android:animation">
+            <set>
+
+                <objectAnimator
+                        android:duration="0"
+                        android:propertyName="strokeAlpha"
+                        android:valueFrom="1"
+                        android:valueTo="1"/>
+                <objectAnimator
+                        android:duration="0"
+                        android:propertyName="trimPathStart"
+                        android:valueFrom="0"
+                        android:valueTo="0"/>
+                <objectAnimator
+                        android:duration="0"
+                        android:propertyName="trimPathEnd"
+                        android:valueFrom="0"
+                        android:valueTo="0"/>
+                <objectAnimator
+                        android:duration="20"
+                        android:propertyName="strokeWidth"
+                        android:valueFrom="0"
+                        android:valueTo="20"/>
+
+                <objectAnimator
+                        android:duration="1000"
+                        android:interpolator="@android:interpolator/linear_out_slow_in"
+                        android:propertyName="trimPathEnd"
+                        android:valueFrom="0"
+                        android:valueTo="1"/>
+
+                <objectAnimator
+                        android:duration="1000"
+                        android:interpolator="@android:interpolator/accelerate_decelerate"
+                        android:propertyName="strokeColor"
+                        android:valueFrom="#99000000"
+                        android:valueTo="#1E9618"
+                        android:valueType="intType"/>
+
+                <objectAnimator
+                        android:duration="600"
+                        android:interpolator="@android:interpolator/linear_out_slow_in"
+                        android:propertyName="trimPathStart"
+                        android:startOffset="700"
+                        android:valueFrom="0"
+                        android:valueTo="0.88047672583"/>
+
+                <objectAnimator
+                        android:duration="500"
+                        android:interpolator="@android:interpolator/linear_out_slow_in"
+                        android:propertyName="strokeWidth"
+                        android:startOffset="800"
+                        android:valueFrom="20"
+                        android:valueTo="14.5"/>
+
+            </set>
+        </aapt:attr>
+    </target>
+
+    <target android:name="downloading_arrow_filling">
+        <aapt:attr name="android:animation">
+
+            <objectAnimator
+                    android:duration="0"
+                    android:propertyName="fillAlpha"
+                    android:valueFrom="1"
+                    android:valueTo="0"/>
+
+        </aapt:attr>
+    </target>
+</animated-vector>
