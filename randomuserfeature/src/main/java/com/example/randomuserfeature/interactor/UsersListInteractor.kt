@@ -1,5 +1,6 @@
 package com.example.randomuserfeature.interactor
 
+import com.example.randomuserfeature.api.entities.User
 import com.example.randomuserfeature.data.PagingLoadingState
 import com.example.randomuserfeature.paging.PageListProvider
 import com.example.randomuserfeature.repository.UsersRepository
@@ -40,5 +41,7 @@ class UsersListInteractor @Inject constructor(
     fun onDestroy() {
         compositeDisposable.dispose()
     }
+
+    fun saveUserToDb(user: User) = usersRepository.insertUserIntoTable(user)
 
 }

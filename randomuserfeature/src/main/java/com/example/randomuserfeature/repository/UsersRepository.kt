@@ -33,7 +33,11 @@ class UsersRepository @Inject constructor(
 
     private fun getUserByIdFromDb(userId: Long) = usersDao.getUserById(userId)
 
-    fun insertUserIntoTable(user: User) = usersDao.insertUser(user)
+    fun insertUserIntoTable(user: User) = Single.create<Long> {
+        val id = usersDao.insertUser(user)
+        if(id > 0) it.onSuccess(usersDao.insertUser(user))
+        else it.onError(Exception())
+    }
 
     fun getUsers(userId: Long, requestedLoadSize: Int): Single<List<User>> {
         if (shouldUseDataBase) return getUsersFromDb(userId, requestedLoadSize)

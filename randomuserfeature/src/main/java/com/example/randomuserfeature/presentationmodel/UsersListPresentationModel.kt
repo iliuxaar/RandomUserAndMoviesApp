@@ -14,12 +14,14 @@ class UsersListPresentationModel @Inject constructor(private val usersListIntera
     val userItemClick = Action<User>()
     val refreshUsersAction = Action<Unit>()
     val retryActionClick = Action<Unit>()
+    val saveActionClick = Action<User>()
     val shouldUseDbClick = Action<Boolean>()
 
     val isPagedListReady = Command<PagedList<User>>()
     val isSwipeLoading = State(initialValue = false)
     val isInitialLoad = State<PagingLoadingState>()
     val isListLoading = State<PagingLoadingState>()
+    val isUserInsertedToDb = State<Long>()
 
     override fun onCreate() {
         super.onCreate()
@@ -41,6 +43,11 @@ class UsersListPresentationModel @Inject constructor(private val usersListIntera
 
         retryActionClick.observable
             .subscribe { usersListInteractor.onRetryListApi() }
+            .untilDestroy()
+
+        saveActionClick.observable
+            .switchMap { usersListInteractor.saveUserToDb(it).toObservable() }
+            .subscribe { isUserInsertedToDb.consumer.accept(it) }
             .untilDestroy()
 
         refreshUsersAction.observable

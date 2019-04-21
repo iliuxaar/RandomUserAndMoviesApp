@@ -21,7 +21,7 @@ interface UsersDao {
     fun getUserById(id: Long): Observable<User>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertUser(user: User)
+    fun insertUser(user: User): Long
 
     @Update
     fun update(user: User)

@@ -1,8 +1,10 @@
 package com.example.randomuserfeature.api.entities
 
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
+import com.jakewharton.rxrelay2.BehaviorRelay
 import java.util.*
 
 @Entity
@@ -27,4 +29,10 @@ data class User(
     @SerializedName("following")         val followingCount: Int = 0,
     @SerializedName("created_at")        val createdDate: Date?,
     @SerializedName("updated_at")        val updatedDate: Date?
-    )
+    ) {
+
+    
+    @Ignore
+    val isAddedToDb: BehaviorRelay<Boolean> = BehaviorRelay.create<Boolean>()
+
+}

@@ -10,25 +10,29 @@ import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 import com.bumptech.glide.Glide
 import com.example.randomuserfeature.R
 import com.example.randomuserfeature.api.entities.User
+import io.reactivex.disposables.Disposable
 import kotlinx.android.synthetic.main.item_user.view.*
 
-class UserViewHolder(view: View, private val itemClickListener: (User) -> Unit) : RecyclerView.ViewHolder(view) {
+class UserViewHolder(
+    view: View,
+    private val itemClickListener: (User) -> Unit,
+    private val saveClickListener: (User) -> Unit
+) : RecyclerView.ViewHolder(view) {
 
     private lateinit var user: User
+    private lateinit var task: Disposable
 
-    private var isDownloading: Boolean = false
-    private var downloadingStartTimeMillis: Long = 0
-
-    private var isCompleteAnimationPending: Boolean = false
 
     init {
-        view.setOnClickListener {
-            itemClickListener.invoke(user)
-        }
+        view.setOnClickListener { itemClickListener.invoke(user) }
+        itemView.dbCheckBox.setOnClickListener { saveClickListener.invoke(user) }
     }
+
+
 
     fun bindTo(user: User) {
         this.user = user
+        task = user.isAddedToDb.subscribe{ if(it) swapAnimation(R.drawable.save_icon_animated_finish) }
         itemView.nameUser.text = user.login
         Glide.with(itemView)
             .load(user.avatarUrl)
@@ -36,19 +40,8 @@ class UserViewHolder(view: View, private val itemClickListener: (User) -> Unit) 
             .circleCrop()
             .into(itemView.imageUser)
         itemView.dbCheckBox.setOnClickListener {
-            if (isCompleteAnimationPending) return@setOnClickListener
-            if (isDownloading) {
-                val delayMillis = 2666 - (System.currentTimeMillis() - downloadingStartTimeMillis) % 2666
-                itemView.dbCheckBox.postDelayed({
-                    swapAnimation(R.drawable.save_icon_animated_finish)
-                    isCompleteAnimationPending = false
-                }, delayMillis)
-                isCompleteAnimationPending = true
-            } else {
-                swapAnimation(R.drawable.save_icon_animated_start)
-                downloadingStartTimeMillis = System.currentTimeMillis()
-            }
-            isDownloading = !isDownloading
+            itemView.dbCheckBox.isEnabled = false
+            swapAnimation(R.drawable.save_icon_animated_start)
         }
     }
 
@@ -58,11 +51,15 @@ class UserViewHolder(view: View, private val itemClickListener: (User) -> Unit) 
         (avd as Animatable).start()
     }
 
+    fun dispose() {
+        task.dispose()
+    }
+
     companion object {
-        fun create(parent: ViewGroup, itemClickListener: (User) -> Unit): UserViewHolder {
+        fun create(parent: ViewGroup, itemClickListener: (User) -> Unit, saveClickListener: (User) -> Unit): UserViewHolder {
             val layoutInflater = LayoutInflater.from(parent.context)
             val view = layoutInflater.inflate(R.layout.item_user, parent, false)
-            return UserViewHolder(view, itemClickListener)
+            return UserViewHolder(view, itemClickListener, saveClickListener)
         }
     }
 

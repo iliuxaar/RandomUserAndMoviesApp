@@ -2,7 +2,6 @@ package com.example.randomuserfeature.fragment
 
 import android.os.Bundle
 import android.view.View
-import android.view.animation.AnimationUtils
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.coremodule.navigation.Router
 import com.example.coremodule.pm.Screen
@@ -27,7 +26,8 @@ class UsersListScreen: Screen<UsersListPresentationModel>(), NavigationMessageHa
 
     private val usersAdapter = UsersListAdapter (
         { presentationModel.userItemClick.consumer.accept(it) },
-        { presentationModel.retryActionClick.consumer.accept(Unit) }
+        { presentationModel.retryActionClick.consumer.accept(Unit) },
+        { presentationModel.saveActionClick.consumer.accept(it) }
     )
 
     override val screenLayout = R.layout.users_layout
@@ -60,6 +60,7 @@ class UsersListScreen: Screen<UsersListPresentationModel>(), NavigationMessageHa
                 swipeRefresher.isRefreshing = it.loadingStatus == LoadingStatus.LOADING
             } else setInitialLoadingState(it)
         }
+        pm.isUserInsertedToDb bindTo { usersAdapter.onAddUserToDb(it) }
 
         dbCheckBox.checkedChanges().bindTo { pm.shouldUseDbClick.consumer.accept(it) }
         swipeRefresher.refreshes().bindTo(pm.refreshUsersAction.consumer)
